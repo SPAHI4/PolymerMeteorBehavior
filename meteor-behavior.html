@@ -1,0 +1,49 @@
+<script>
+    MeteorBehavior = {
+
+        properties: {
+            isReady: {
+                type: Boolean,
+                value: false,
+                notify: true
+            },
+            currentUser: {
+                type: Object,
+                value: null,
+                notify: true
+            }
+        },
+
+        ready: function () {
+            var self = this;
+            var subCount = 0;
+            self.subscriptions.forEach(function(itm){
+                itm = $.type(itm) == 'array' ? itm : [itm];
+                itm[itm.length] = function () {
+                    subCount++;
+                    self.isReady = subCount >= self.subscriptions.length;
+                    if (self.isReady)
+                        self.fire('data-ready');
+                };
+                Meteor.subscribe.apply(null, itm);
+            });
+
+            Meteor.startup(function () {
+                Tracker.autorun(function(){
+                    self.currentUser = Meteor.user();
+                });
+                Tracker.autorun(self.autorun.bind(self));
+            });
+        },
+
+        subscriptions: [],
+
+        logout: function(cb){
+          return Meteor.logout(cb);
+        },
+
+        autorun: function() {
+        }
+
+    };
+</script>
