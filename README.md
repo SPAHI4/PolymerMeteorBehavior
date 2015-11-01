@@ -18,7 +18,7 @@ Example usage:
         <paper-spinner active="{{!isReady}}"></paper-spinner>
         
         <template is="dom-repeat" items="{{posts}}">
-          <div class="post">{{post.content}}</div>
+          <div class="post">{{item.content}}</div>
         </template>
     </template>
 </dom-module>
